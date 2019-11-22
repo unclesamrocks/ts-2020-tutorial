@@ -1,1 +1,1 @@
-console.log('Logging something new!');
+var root = document.getElementById('root');

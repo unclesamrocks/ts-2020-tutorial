@@ -1,1 +1,1 @@
-console.log('Logging something new!')
+const root: HTMLElement = document.getElementById('root')
