@@ -1,13 +1,20 @@
 {
     "compilerOptions": {
+        "target": "ES6",
         "module": "commonjs",
-        "noImplicitAny": true,
         "removeComments": false,
-        "preserveConstEnums": true,
-        "sourceMap": false,
-        "allowJs": true
+        "sourceMap": true,
+        "allowJs": true,
+        "watch": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "strict": true,
     },
-    "files": [
-        "app"
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "lessons"
     ]
 }
