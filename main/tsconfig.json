@@ -9,7 +9,7 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "strict": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
     },
     "include": [
         "src"
