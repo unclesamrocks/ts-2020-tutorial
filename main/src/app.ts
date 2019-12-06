@@ -1,16 +1,23 @@
 /*==============================================
+				Project Class
+===============================================*/
+enum ProjectStatus {
+	Active = 'active',
+	Finished = 'finished'
+}
+
+class Project {
+	constructor(public id: number, public title: string, public desc: string, public people: number, public status: ProjectStatus) {}
+}
+
+/*==============================================
 				Project State
 ===============================================*/
-interface Project {
-	id: number
-	title: string
-	desc: string
-	people: number
-}
+type Listener = (items: Project[]) => void
 
 class ProjectState {
 	private listeners: any[] = []
-	private projects: any[] = []
+	private projects: Project[] = []
 	private static instance: ProjectState
 
 	private constructor() {}
@@ -21,17 +28,12 @@ class ProjectState {
 		return this.instance
 	}
 
-	addListener(listenerFn: (a: Project[]) => void) {
+	addListener(listenerFn: Listener) {
 		this.listeners.push(listenerFn)
 	}
 
 	addProject(title: string, desc: string, people: number) {
-		const newProject: Project = {
-			id: Date.now(),
-			title: title,
-			desc: desc,
-			people: people
-		}
+		const newProject: Project = new Project(Date.now(), title, desc, people, ProjectStatus.Active)
 		console.log('[ProjectState][newProject]', newProject)
 		this.projects.push(newProject)
 		// toggle listeners
@@ -170,9 +172,9 @@ class ProjectList {
 	templateEl: HTMLTemplateElement
 	hostEl: HTMLDivElement
 	element: HTMLElement
-	assignedProjects: any[]
+	assignedProjects: Project[]
 
-	constructor(private type: 'active' | 'finished') {
+	constructor(private type: ProjectStatus) {
 		this.templateEl = document.querySelector('#project-list')! as HTMLTemplateElement
 		this.hostEl = document.querySelector('#app')! as HTMLDivElement
 
@@ -183,7 +185,7 @@ class ProjectList {
 		this.element.id = `${this.type}-projects`
 
 		projectState.addListener(projects => {
-			this.assignedProjects = projects
+			this.assignedProjects = projects.filter(proj => proj.status === this.type)
 			this.renderProjects()
 		})
 
@@ -198,7 +200,7 @@ class ProjectList {
 	private renderContent() {
 		const listId = `${this.type}-project-list`
 		this.element.querySelector('ul')!.id = listId
-		this.element.querySelector('h2')!.textContent = this.type.toUpperCase() + ' PROJECTS'
+		this.element.querySelector('h2')!.textContent = this.type.toString().toUpperCase() + ' PROJECTS'
 	}
 
 	private renderProjects() {
@@ -216,5 +218,5 @@ class ProjectList {
 				init
 ===============================================*/
 const projInput = new ProjectInput()
-const activeProjectlist = new ProjectList('active')
-const finishedProjectlist = new ProjectList('finished')
+const activeProjectlist = new ProjectList(ProjectStatus.Active)
+const finishedProjectlist = new ProjectList(ProjectStatus.Finished)
