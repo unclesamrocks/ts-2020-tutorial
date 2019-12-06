@@ -195,7 +195,7 @@ class ProjectInput extends ComponentBaseClass<HTMLDivElement, HTMLFormElement> {
 			Project List Class
 ===============================================*/
 class ProjectList extends ComponentBaseClass<HTMLDivElement, HTMLElement> {
-	assignedProjects: Project[]
+	assignedProjects: ProjectItem[]
 
 	constructor(private type: ProjectStatus) {
 		super('project-list', 'app', false, `${type}-projects`)
@@ -208,7 +208,7 @@ class ProjectList extends ComponentBaseClass<HTMLDivElement, HTMLElement> {
 
 	configure() {
 		projectState.addListener(projects => {
-			this.assignedProjects = projects.filter(proj => proj.status === this.type)
+			this.assignedProjects = projects.filter(proj => proj.status === this.type).map(project => new ProjectItem(this.hostEl.id, project))
 			this.renderProjects()
 		})
 	}
@@ -223,10 +223,30 @@ class ProjectList extends ComponentBaseClass<HTMLDivElement, HTMLElement> {
 		const listElement = document.getElementById(`${this.type}-project-list`)! as HTMLUListElement
 		listElement.innerHTML = ''
 		for (const projectItem of this.assignedProjects) {
-			const listItem = document.createElement('li')
-			listItem.textContent = projectItem.title
-			listElement.appendChild(listItem)
+			listElement.appendChild(projectItem.renderContent())
 		}
+	}
+}
+
+/*==============================================
+				Project Item
+===============================================*/
+class ProjectItem extends ComponentBaseClass<HTMLUListElement, HTMLLIElement> {
+	private project: Project
+
+	constructor(hostId: string, project: Project) {
+		super('single-project', hostId, false, project.id.toString())
+		// saving project instance
+		this.project = project
+	}
+
+	configure() {}
+
+	renderContent(): HTMLLIElement {
+		this.element.querySelector('h2')!.textContent = this.project.title
+		this.element.querySelector('h3')!.textContent = 'Number of people: ' + this.project.people.toString()
+		this.element.querySelector('p')!.textContent = this.project.desc
+		return this.element
 	}
 }
 
