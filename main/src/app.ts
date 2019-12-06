@@ -1,4 +1,45 @@
 /*==============================================
+				Validation
+===============================================*/
+
+interface ValidationObj {
+	value: string | number
+	required?: boolean
+	minLength?: number
+	maxLength?: number
+	min?: number
+	max?: number
+}
+
+function validate(obj: ValidationObj): boolean {
+	// console.log('[validation]', obj)
+	let isValid = true
+	if (!obj.required) return true
+	if (obj.minLength != null && obj.value.toString().trim().length < obj.minLength) isValid = false
+	if (obj.maxLength != null && obj.value.toString().trim().length > obj.maxLength) isValid = false
+	if (obj.min != null && obj.value < obj.min) isValid = false
+	if (obj.max != null && obj.value > obj.max) isValid = false
+	// console.log('[validation][result]', isValid)
+	return isValid
+}
+
+/*==============================================
+				Autobind
+===============================================*/
+
+function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
+	const originalMethod = descriptor.value
+	const adjustedDescriptor: PropertyDescriptor = {
+		configurable: true,
+		get() {
+			const boundFn = originalMethod.bind(this)
+			return boundFn
+		}
+	}
+	return adjustedDescriptor
+}
+
+/*==============================================
 			Component Base Class
 ===============================================*/
 abstract class ComponentBaseClass<H extends HTMLElement, E extends HTMLElement> {
@@ -41,25 +82,33 @@ class Project {
 }
 
 /*==============================================
+				State Class
+===============================================*/
+type Listener<T> = (items: T[]) => void
+
+abstract class State<T> {
+	protected listeners: Listener<T>[] = []
+
+	addListener(listenerFn: Listener<T>) {
+		this.listeners.push(listenerFn)
+	}
+}
+
+/*==============================================
 				Project State
 ===============================================*/
-type Listener = (items: Project[]) => void
-
-class ProjectState {
-	private listeners: any[] = []
+class ProjectState extends State<Project> {
 	private projects: Project[] = []
 	private static instance: ProjectState
 
-	private constructor() {}
+	private constructor() {
+		super()
+	}
 
 	static getInstance(): ProjectState {
 		if (this.instance) return this.instance
 		this.instance = new ProjectState()
 		return this.instance
-	}
-
-	addListener(listenerFn: Listener) {
-		this.listeners.push(listenerFn)
 	}
 
 	addProject(title: string, desc: string, people: number) {
@@ -74,47 +123,6 @@ class ProjectState {
 }
 
 const projectState = ProjectState.getInstance()
-
-/*==============================================
-				Validation
-===============================================*/
-
-interface ValidationObj {
-	value: string | number
-	required?: boolean
-	minLength?: number
-	maxLength?: number
-	min?: number
-	max?: number
-}
-
-function validate(obj: ValidationObj): boolean {
-	// console.log('[validation]', obj)
-	let isValid = true
-	if (!obj.required) return true
-	if (obj.minLength != null && obj.value.toString().trim().length < obj.minLength) isValid = false
-	if (obj.maxLength != null && obj.value.toString().trim().length > obj.maxLength) isValid = false
-	if (obj.min != null && obj.value < obj.min) isValid = false
-	if (obj.max != null && obj.value > obj.max) isValid = false
-	// console.log('[validation][result]', isValid)
-	return isValid
-}
-
-/*==============================================
-				Autobind
-===============================================*/
-
-function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
-	const originalMethod = descriptor.value
-	const adjustedDescriptor: PropertyDescriptor = {
-		configurable: true,
-		get() {
-			const boundFn = originalMethod.bind(this)
-			return boundFn
-		}
-	}
-	return adjustedDescriptor
-}
 
 /*==============================================
 				Project Input Class
