@@ -21,8 +21,6 @@ const TodoItem: React.FC<TodoItemProps> = props => {
 }
 
 export default memo(TodoItem, (prev, next) => {
-    console.log('[prev][id]', prev.id)
-    console.log('[next][id]', next.id)
-    console.log('[compare]', prev.id === next.id)
-    return true
+    if (prev.id !== next.id) return false
+    else return true
 })
