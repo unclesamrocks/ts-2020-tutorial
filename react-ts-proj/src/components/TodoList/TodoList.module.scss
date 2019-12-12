@@ -1,1 +1,12 @@
-.TodoList {}
+.TodoList {
+    width: 90%;
+    max-width: 40rem;
+    margin: 2rem auto;
+    padding: 0;
+
+    .title {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bolder;
+    }
+}

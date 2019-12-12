@@ -1,1 +1,39 @@
-.TodoItem {}
+.TodoItem {
+    margin: 1rem 0;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .remove {
+        $d: 10px;
+        width: $d;
+        height: $d;
+        position: relative;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:before,
+        &:after {
+            content: '';
+            height: 1px;
+            width: 100%;
+            background: black;
+            position: absolute;
+            top: 50%;
+            left: 0;
+        }
+
+        &::before {
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+    }
+}
