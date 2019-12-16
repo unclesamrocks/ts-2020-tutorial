@@ -1,24 +1,13 @@
-function test() {
-	let i = 1
-	let g = 'astr'
-	return function(name) {
-		this.counter = () => i++
-		this.str = g
-		this.change = str => (this.str = str)
-		console.log('[i]', i, '[name]', name)
-		return this
-	}
+function spinalCase(str) {
+    // "It's such a fine line between stupid, and clever."
+    // --David St. Hubbins
+    return str
+        .replace(/([A-Z])/g, ' $1')
+        .trim()
+        .split(/[ _-]+/g)
+        .join('-')
+        .toLowerCase();
 }
-
-const ggg = test()('ggg')
-
-console.log(ggg.counter())
-console.log(ggg.counter())
-console.log(ggg.counter())
-
-console.log(ggg.str + ' new stuff')
-ggg.change('completely new stuff')
-console.log(ggg.str)
-
-const fff = test()('fff')
-console.log(fff.counter())
+console.log('[result]', spinalCase('This Is Spinal Tap'));
+console.log('[result]', spinalCase('thisIsSpinalTap')); // should return "this-is-spinal-tap"
+console.log('[result]', spinalCase('The_Andy_Griffith_Show')); // should return "the-andy-griffith-show".
