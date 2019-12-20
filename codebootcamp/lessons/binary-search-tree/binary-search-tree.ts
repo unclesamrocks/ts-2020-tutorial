@@ -5,9 +5,26 @@ class NodeType<T> {
 }
 class BinarySearchTree<T> {
 	constructor(public root: NodeType<T> | null = null) {}
+
+	findMin(): T | null | undefined {
+		if (!this.root) return null
+		let curr = this.root
+		while (curr) {
+			if (curr.left) curr = curr.left
+			else return curr.value
+		}
+	}
+	findMax(): T | null | undefined {
+		if (!this.root) return null
+		let curr = this.root
+		while (curr) {
+			if (curr.right) curr = curr.right
+			else return curr.value
+		}
+	}
 	// change code below this line
 	add(num: number): null | undefined {
-		const n = (new NodeType(num)) as any as NodeType(num)
+		const n = (new NodeType(num) as any) as NodeType<T>
 		if (!this.root) {
 			this.root = n
 			return undefined
@@ -55,3 +72,5 @@ for (let i = 0; i < vals.length; i++) {
 
 console.log(vals)
 displayTree(tree)
+console.log(tree.findMin())
+console.log(tree.findMax())
